@@ -1,5 +1,5 @@
-# US Treasury yield curve and macroeconomy interaction: evidence from the non-parametric functional lagged regression approach.
-Supporting material for the paper: Rubin, T. (2020). "US Treasury yield curve and macroeconomy interaction: evidence from the non-parametric functional lagged regression approach." *arXiv preprint*
+# Yield curve and macroeconomy interaction: evidence from the non-parametric functional lagged regression approach.
+Supporting material for the paper: Rubin, T. (2020). "Yield curve and macroeconomy interaction: evidence from the non-parametric functional lagged regression approach." *arXiv preprint*
 
 
 A. CONTENTS
@@ -47,7 +47,7 @@ https://github.com/tomasrubin
 E. REFERENCES
 ----------------
 
-[1] Principal reference: Rubin, T. (2020). "US Treasury yield curve and macroeconomy interaction: evidence from the non-parametric functional lagged regression approach." *arXiv preprint*
+[1] Principal reference: Rubin, T. (2020). "Yield curve and macroeconomy interaction: evidence from the non-parametric functional lagged regression approach." *arXiv preprint*
 
 	
 

@@ -91,7 +91,7 @@ end
 
 % keep only those maturities, for which there is at least one observation
 keep = (sum(~isnan(data.yields),1)>0);
-keep(11) = 0; % artificially remove maturity 20 years % !!!!!!!!!!!!!!!
+keep(11) = 0;
 data.yields = data.yields(:,keep);
 
 % differences
@@ -114,7 +114,11 @@ x = onb.gridSpace(data.maturities_gs_indx);
 y = data.maturities_real;
 xx = onb.gridSpace;
 yy = spline(x,y,xx);
-%plot(x,y,'o',xx,yy)
+plot(x,y,'o',xx,yy,'MarkerFaceColor', 'b')
+ylabel("real maturity in [0,30]")
+xlabel("transformed maturity in [0,1]")
+title("transformation of the spatial domain")
+
 data.gridSpace_to_maturities = yy;
 
 % ONB
@@ -581,7 +585,7 @@ m = repmat( mean(data.yields), data.nGridTime, 1 );
 
 mse_total = mean(( m(:) - data.yields(:)).^2 );
 mse_residual = mean(( predictions.yields(:) - data.yields(:)).^2 );
-mse_regres = mean(( predictions.yields(:) - m(:)).^2 );
+
 
 r2 = 1 - mse_residual / mse_total 
 

@@ -24,7 +24,7 @@ The data for the US treasury yield curve and the macroeconomic variables.
 B. REQUIREMENTS
 ---------------
 
-The scripts are written in MATLAB and run/testen in its version R2018a.
+The scripts are written in MATLAB and run/tested in its version R2018a.
 The simulation requires the package 'fdaM' (https://www.psych.mcgill.ca/misc/fda/). The packages is included in the master folder.
 
 C. USAGE

@@ -7,7 +7,7 @@
 % for this case study is openly available on GitHub [2].
 %
 % Individuals are free to use the codes for the purpose academic research, provided it is properly acknowledged.
-% For any other use, permission must first be arranged with the author(s). Unless otherwise specified, the author
+% For any other use, permission must first be arranged with the author. Unless otherwise specified, the author
 % Please contact me if you find errors in the codes.
 %
 % Running the script: press F5 to run the entire file. The results are outputed as plots.
@@ -18,7 +18,7 @@
 %         github.com/tomasrubin/
 %
 % References:
-%   [1] 
+%   [1] Rubin, T. (2020). "US Treasury yield curve and macroeconomy interaction: evidence from the non-parametric functional lagged regression approach." arXiv preprint
 %   [2] github.com/tomasrubin/us-yield-curve-macroeconomics
 % 
 % 
@@ -109,7 +109,7 @@ data.maturities_gs_indx = ceil(linspace(1, onb.nGridSpace, data.n_maturities ));
 % visiualise the transofrmation of maturities to the equidistant grid
 %subplot(1,1,1)
 % plot(  onb.gridSpace(data.maturities_gs_indx),data.maturities_real, '-x' )
-
+figure(1)
 x = onb.gridSpace(data.maturities_gs_indx);
 y = data.maturities_real;
 xx = onb.gridSpace;
@@ -127,8 +127,14 @@ data.onb = onb;
 
 
 %% nonclassical surface plot - visualise the evolution at maturities
-figure(1)
+figure(2)
 subplot(1,2,1)
+
+year_str = cell(length(data.year_month),1);
+for ii = 1:length(data.year_month)
+    year_str(ii) = extractBetween(num2str(data.year_month(ii)),1,4);
+end
+
 
 gridTime = 1:data.nGridTime;
 % first curve
@@ -170,7 +176,7 @@ suptitle("US treasury yield curve")
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% visualise macro
 
-figure(2)
+figure(3)
 plot( macro.date, macro.x )
 %hline( mean(macro.x) )
 legend(["annual industry change","annual inflation","federal funds rate"])
@@ -207,22 +213,11 @@ for lag_idx = 1:macro.numOfCovs
     macro.corrs(lag_idx,:,:) = squeeze(macro.covs(lag_idx,:,:)) ./ sqrt( corr_normalizer'.*corr_normalizer );
 end
 
-% % visualise correlations
-% figure(3)
-% for lag_idx = 1:(4*6)
-%     lag_real = lag_idx - 1;
-%     
-%     subplot(4,6,lag_idx)
-%     surf( squeeze(macro.corrs(lag_idx,:,:)) )
-%     title("lag="+num2str(lag_real))
-%     zlim([-1 1])
-% end
-
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% spectral analysis of macro
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-figure(3)
+figure(4)
 % choose weight function
 % weight_function = @(x) (abs(x)<=0.5) .* ( 1-6*x.^2 + 6*abs(x).^3 ) + (abs(x)>0.5) .* (2*(1-abs(x)).^3); % parzen weight
 weight_function = @(x) 1-abs(x); % bartlett weight
@@ -267,7 +262,6 @@ for k = ceil(macro.nGridFreq/2):macro.nGridFreq
     [V,D] = eig(m); % i.e. the decomposition:  m = V*D*V'
     diagD = real(diag(D)); % note that the harmonic eigenvalues must be always real
     macro.specDensity_harmonic_eigenvalues(k,:) = diagD;
-%     if sum( diagD< 0 ) == 3, break; end % break if all eigenvalues are negative => the rest of spec density is set zero
     diagD( diagD< 0 ) = 0; % truncate those elements that are less than (numerical) zero
     m = V*diag(diagD)*V';
     macro.specDensity_positified(k,:,:) = (m+m')/2; % again, make sure it's self-adjoint
@@ -282,7 +276,6 @@ for k_indx = 1:floor(macro.nGridFreq/2)
     [V,D] = eig(m); % i.e. the decomposition:  m = V*D*V'
     diagD = real(diag(D)); % note that the harmonic eigenvalues must be always real
     macro.specDensity_harmonic_eigenvalues(k,:) = diagD;
-%     if sum( diagD< 0 ) == 3, break; end % break if all eigenvalues are negative => the rest of spec density is set zero
     diagD( diagD< 0 ) = 0; % truncate those elements that are less than (numerical) zero
     m = V*diag(diagD)*V';
     macro.specDensity_positified(k,:,:) = (m+m')/2; % again, make sure it's self-adjoint
@@ -325,19 +318,6 @@ plot( macro.gridFreq, macro.specDensity(:,2,2) )
 plot( macro.gridFreq, macro.specDensity(:,3,3) )
 hold off
 
-% subplot(3,1,3)
-% plot( macro.gridFreq, macro.specDensity_positified(:,1,1) )
-% hold on
-% plot( macro.gridFreq, macro.specDensity_positified(:,2,2) )
-% plot( macro.gridFreq, macro.specDensity_positified(:,3,3) )
-% hold off
-
-% subplot(3,1,3)
-% plot( macro.gridFreq, macro.specDensity_harmonic_eigenvalues(:,1) )
-% hold on
-% plot( macro.gridFreq, macro.specDensity_harmonic_eigenvalues(:,2) )
-% plot( macro.gridFreq, macro.specDensity_harmonic_eigenvalues(:,3) )
-% hold off
 
 ylabel("marginal spec densities")
 xlabel("frequency (highlighted the frequencies visualised above)")
@@ -351,7 +331,7 @@ legend(["annual industry change","annual inflation","federal funds rate"])
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% fit the mean function for YIELDS
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-figure(4)
+figure(5)
 
 bw_mu = 0.1;
 mu_est = fSmootherMU_grid_unif(data, bw_mu);
@@ -380,7 +360,7 @@ xlabel("maturity [years]")
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% cross spectral analysis between MACRO and YIELDS
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-figure(5)
+figure(6)
 
 % settings for the crossSpecDensity estimation
 bw_f = 0.1;
@@ -419,11 +399,10 @@ zlabel("imaginary part")
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% recover the spectral transfer function
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-figure(6)
+figure(7)
 
+% no regularisation is required
 Tikhonov_regularisation = 0.000;
-% eigenvalue_treshold = 0.0001;
-% eigenvalue_treshold = 0.001;
 
 macro.specDensity_inv = nan( macro.nGridFreq, 3, 3 );
 specTransfer_ONB_joint = nan( macro.nGridFreq, onb.nBasis, 3 );
@@ -431,15 +410,7 @@ specTransfer_ONB_1 = nan( macro.nGridFreq, onb.nBasis );
 specTransfer_ONB_2 = nan( macro.nGridFreq, onb.nBasis );
 specTransfer_ONB_3 = nan( macro.nGridFreq, onb.nBasis );
 for k = 1:macro.nGridFreq
-    
-    % SPECTRAL TRUNCATION: spectral density to be inverted
-%     m = squeeze(macro.specDensity_positified(k,:,:));
-%     [V,D] = eig(m); % i.e. the decomposition:  m = V*D*V'
-%     diagD = real(diag(D)); % note that the harmonic eigenvalues must be always real
-%     diagD( diagD< eigenvalue_treshold ) = 0; % truncate those elements that are less than the treshold
-%     diagD( diagD>= eigenvalue_treshold ) = 1./diagD( diagD>= eigenvalue_treshold ); % invert those elements that are greater than the treshold    
-%     m_inv = V*diag(diagD)*V'; % inverted spectral density
-    
+        
     % TIKHONOV REGULARISATION
     m = squeeze(macro.specDensity_positified(k,:,:));
     m_inv = inv(m + Tikhonov_regularisation * eye(3));
@@ -489,19 +460,6 @@ for ii = 1:length(lags_to_show)
     lag_indx = lag_real + transfer.numOfLags + 1;
     for macro_variable_i = 1:3
         
-%         % first line
-%         subplot(6,length(lags_to_show), ii + length(lags_to_show)*(macro_variable_i-1)*2 )
-%         v = transfer.inSpace_joint(lag_indx,:,macro_variable_i);
-%         plot( onb.gridSpace, v, 'b','linewidth',3 )
-%         ylim([-0.5 0.5])
-% %         ylim([-0.5 0.5] * ceil(2*max(max(abs(transfer.inSpace_joint(:,:,macro_variable_i))))) )
-%         
-%         % label on y axis
-%         if ii == 1
-%             ylabel({ macro_variables_names{macro_variable_i},"equidistant grid"})
-%         end
-        
-        
         
         % second line
         v = transfer.inSpace_joint(lag_indx,:,macro_variable_i);
@@ -526,7 +484,7 @@ suptitle("estimated filter coefficients for the lagged regression model")
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% prediction
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-figure(7)
+figure(8)
 
 predictions = [];
 predictions.ONB = nan(data.nGridTime, onb.nBasis);

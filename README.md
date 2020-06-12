@@ -14,7 +14,7 @@ for this case study is openly available on GitHub [2].
 - **master**:
 This folder includes all the functions used for estimation, prediction, and regression treatments of sparsely observed functional time series.
 
-- **us_macro.m**:
+- **demo.m**:
 Run this script to see the visualisations for the case study results.
 
 - **us_macro.xlsx** and **us_yields.xlsx**:

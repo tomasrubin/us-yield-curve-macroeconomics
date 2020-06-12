@@ -11,13 +11,13 @@ funds rate. The methodology follows the novel non-parametric toolbox for spectra
 observed functional time series. For the details of the methodology and the analysis, see [1]. The code
 for this case study is openly available on GitHub [2].
 
-- **master**
+- **master**:
 This folder includes all the functions used for estimation, prediction, and regression treatments of sparsely observed functional time series.
 
-- **us_macro.m**
+- **us_macro.m**:
 Run this script to see the visualisations for the case study results.
 
-- **us_macro.xlsx** and **us_yields.xlsx**
+- **us_macro.xlsx** and **us_yields.xlsx**:
 The data for the US treasury yield curve and the macroeconomic variables.
 	
 

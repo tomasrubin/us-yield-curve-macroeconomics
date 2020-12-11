@@ -131,8 +131,10 @@ figure(2)
 subplot(1,2,1)
 
 year_str = cell(length(data.year_month),1);
+month_str = cell(length(data.year_month),1);
 for ii = 1:length(data.year_month)
     year_str(ii) = extractBetween(num2str(data.year_month(ii)),1,4);
+    month_str(ii) = extractBetween(num2str(data.year_month(ii)),5,6);
 end
 
 
@@ -172,12 +174,23 @@ yticklabels(year_str(y_years) + "/01" )
 
 suptitle("US treasury yield curve")
 
+% %%
+% 
+% for t_i=1:3
+%     t = t_i * 60;
+%     subplot(3,1,t_i)
+%     plot( data.maturities_real, data.yields(t,:), 'xk', 'LineWidth', 2)
+%     title( year_str(t) +"/"+month_str(t) )
+%     xlabel("maturity [years]")
+%     ylabel("yield [%]")
+%     ylim([4, 10])
+% end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% visualise macro
 
 figure(3)
-plot( macro.date, macro.x )
+plot( macro.date, macro.x, "LineWidth", 2 )
 %hline( mean(macro.x) )
 legend(["annual industry change","annual inflation","federal funds rate"])
 ylabel("percantage points [%]")
@@ -529,7 +542,7 @@ for ii = 1:length(t_visualise)
     scatter( data.maturities_real, data.yields(t,:), 'filled', 'or' )
     hold off
     ylim(vis_lim)
-    title("t="+num2str(t))
+    title( year_str(t) +"/"+month_str(t) )
     
     
 end
